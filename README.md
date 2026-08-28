@@ -1,8 +1,18 @@
 # Jakarta EE Hourglass AI Modeler
 
+![Jakarta EE official logo](jakarta_ee_logo_schooner_color_horizontal_default.svg)
+
 ## Challenge
 
 This is a template project for the Jakarta EE Hourglass AI Modeler challenge.
+
+## What Is Jakarta EE 11?
+
+Jakarta EE is an open, community-driven platform for building modern cloud-native Java applications.
+
+Jakarta EE 11 continues that direction with a strong focus on developer productivity and performance, including the new Jakarta Data 1.0 specification and broad API updates across the platform profiles.
+
+Learn more: [Jakarta EE 11 Release](https://jakarta.ee/release/11/)
 
 ## Requirements
 
