@@ -48,6 +48,38 @@ mvn clean package liberty:run
 
 ### 3. Test the Server
 
-The Status endpoint is available at: `http://localhost:8080/duke-knows-me/status´
+If you run with Maven directly, test the endpoint at:
+
+`http://localhost:8080/clepsammia/api/hello`
+
+## Docker Compose Quick Start
+
+### 1. Start the Server
+
+```bash
+docker compose up -d
+```
+
+### 2. Follow Logs
+
+```bash
+docker compose logs -f hourglass
+```
+
+### 3. Test the Endpoint
+
+```bash
+curl http://localhost:28080/clepsammia/api/hello
+```
+
+Expected response:
+
+`Hello from Dukes!`
+
+### 4. Stop the Server
+
+```bash
+docker compose down
+```
 
 

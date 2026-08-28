@@ -10,6 +10,7 @@
     </featureManager>
 
     <httpEndpoint id="defaultHttpEndpoint"
+                  host="*"
                   httpPort="8080"/>
     <webApplication location="clepsammia.war" contextRoot="/clepsammia"/>
 
