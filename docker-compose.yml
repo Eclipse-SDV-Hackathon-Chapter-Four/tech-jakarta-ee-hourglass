@@ -1,6 +1,6 @@
 services:
   hourglass:
-    image: maven:3.9-eclipse-temurin-23
+    image: maven:3.9-eclipse-temurin-25
     working_dir: /workspace
     volumes:
       - ./:/workspace
@@ -9,7 +9,7 @@ services:
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
     ports:
       - "28080:8080"
-    command: mvn -DskipTests -Dmaven.compiler.release=23 clean package liberty:run
+    command: mvn -DskipTests clean package cargo:run -Pglassfish
 
 volumes:
   maven-cache:

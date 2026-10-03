@@ -37,7 +37,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.release>26</maven.compiler.release>
+        <maven.compiler.release>25</maven.compiler.release>
     </properties>
 
     <dependencies>
@@ -51,95 +51,121 @@
         <dependency>
             <groupId>dev.langchain4j.cdi</groupId>
             <artifactId>langchain4j-cdi-portable-ext</artifactId>
-            <version>1.2.0-Beta1</version>
+            <version>1.5.0</version>
         </dependency>
         <dependency>
             <groupId>dev.langchain4j.cdi.mp</groupId>
             <artifactId>langchain4j-cdi-config</artifactId>
-            <version>1.2.0-Beta1</version>
+            <version>1.5.0</version>
         </dependency>
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j</artifactId>
-            <version>1.13.0</version>
+            <version>1.21.0</version>
         </dependency>
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-open-ai</artifactId>
-            <version>1.13.0</version>
+            <version>1.21.0</version>
         </dependency>
 
     </dependencies>
 
     <build>
         <finalName>clepsammia</finalName>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>3.3.2</version>
-            </plugin>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.codehaus.cargo</groupId>
+                    <artifactId>cargo-maven3-plugin</artifactId>
+                    <version>1.10.29</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.11.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>3.3.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>io.openliberty.tools</groupId>
+                    <artifactId>liberty-maven-plugin</artifactId>
+                    <version>3.12.3</version>
+                    <configuration>
+                        <runtimeArtifact>
+                            <groupId>io.openliberty</groupId>
+                            <artifactId>openliberty-runtime</artifactId>
+                            <version>26.0.0.5</version>
+                            <type>zip</type>
+                        </runtimeArtifact>
 
-            <plugin>
-                <groupId>io.openliberty.tools</groupId>
-                <artifactId>liberty-maven-plugin</artifactId>
-                <version>3.12.0</version>
-                <configuration>
-                    <runtimeArtifact>
-                        <groupId>io.openliberty</groupId>
-                        <artifactId>openliberty-runtime</artifactId>
-                        <version>26.0.0.5</version>
-                        <type>zip</type>
-                    </runtimeArtifact>
+                    </configuration>
+                </plugin>
 
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.wildfly.plugins</groupId>
-                <artifactId>wildfly-maven-plugin</artifactId>
-                <version>5.1.3.Final</version>
-                <configuration>
-                    <feature-packs>
-                        <feature-pack>
-                            <location>org.wildfly:wildfly-galleon-pack:36.0.0.Final</location>
-                        </feature-pack>
-                    </feature-packs>
-                    <layers>
-                        <!-- layers may be used to customize the server to provision-->
-                        <layer>cloud-server</layer>
-                    </layers>
-                </configuration>
-            </plugin>
-        </plugins>
+                <plugin>
+                    <groupId>org.wildfly.plugins</groupId>
+                    <artifactId>wildfly-maven-plugin</artifactId>
+                    <version>6.0.1.Final</version>
+                    <configuration>
+                        <!--Bind to any interface, needed for remote access, e.g. in Docker-->
+                        <serverArgs>-b=0.0.0.0</serverArgs>
+                        <feature-packs>
+                            <feature-pack>
+                                <location>org.wildfly:wildfly-galleon-pack:39.0.1.Final</location>
+                            </feature-pack>
+                        </feature-packs>
+                        <layers>
+                            <!-- layers may be used to customize the server to provision-->
+                            <layer>cloud-server</layer>
+                        </layers>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 
     <profiles>
         <profile>
-            <id>payara</id>
-            <properties>
-                <!-- 2024-04-22: Payara does not run on Java 24. Works on 23. -->
-                <maven.compiler.release>23</maven.compiler.release>
-            </properties>
+            <id>glassfish</id>
             <build>
                 <plugins>
                     <plugin>
                         <groupId>org.codehaus.cargo</groupId>
                         <artifactId>cargo-maven3-plugin</artifactId>
-                        <version>1.10.18</version>
+                        <configuration>
+                            <container>
+                                <containerId>glassfish8x</containerId>
+                                <artifactInstaller>
+                                    <groupId>org.glassfish.main.distributions</groupId>
+                                    <artifactId>glassfish</artifactId>
+                                    <version>8.0.5</version>
+                                    <type>zip</type>
+                                </artifactInstaller>
+                            </container>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>payara</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.cargo</groupId>
+                        <artifactId>cargo-maven3-plugin</artifactId>
                         <configuration>
                             <container>
                                 <containerId>payara</containerId>
-                                <zipUrlInstaller>
-                                    <url>
-                                        https://repo1.maven.org/maven2/fish/payara/distributions/payara/7.2025.1.Alpha1/payara-7.2025.1.Alpha1.zip
-                                    </url>
-                                </zipUrlInstaller>
+                                <artifactInstaller>
+                                    <groupId>fish.payara.distributions</groupId>
+                                    <artifactId>payara</artifactId>
+                                    <version>7.2026.9</version>
+                                    <type>zip</type>
+                                </artifactInstaller>
                             </container>
                         </configuration>
                     </plugin>

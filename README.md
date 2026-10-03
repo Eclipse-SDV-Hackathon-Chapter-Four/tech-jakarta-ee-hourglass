@@ -16,13 +16,13 @@ Learn more: [Jakarta EE 11 Release](https://jakarta.ee/release/11/)
 
 ## Requirements
 
-- Java 23 or later (Java 25 for GlassFish)
+- Java 25 or later
 - Maven 3.8 or later
 - One of the supported Jakarta EE servers:
   - GlassFish 8.0.0 or later
-  - Payara 7.2025.2 or later
+  - Payara 7.2026.1 or later
   - WildFly 39.0.1.Final or later
-  - Open Liberty 26.0.0.3-beta or later
+  - Open Liberty 26.0.0.5 or later
 
 ## Quick Start
 
