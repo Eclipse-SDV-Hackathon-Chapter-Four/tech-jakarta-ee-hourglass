@@ -7,7 +7,7 @@
  *
  * * SPDX-License-Identifier: EPL-2.0
  ********************************************************************************/
-package dukes.hourglass;
+package dukes.analysis;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -18,17 +18,17 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 @Path("/hourglass")
-public class HourglassResource {
+public class AnalyticsResource {
 
     @Inject
-    private HourglassService hourglassService;
+    private AnalyticsService hourglassService;
 
     @POST
     @Path("analyze")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response generateMapping(HourglassInput input) {
-        // Call service and return 200 OK with the HourglassOutput
+    public Response generateMapping(AnalyticsInput input) {
+        // Call service and return 200 OK with the AnalyticsOutput
         return Response.ok().build();
     }
 

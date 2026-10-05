@@ -7,12 +7,12 @@
  *
  * * SPDX-License-Identifier: EPL-2.0
  ********************************************************************************/
-package dukes;
+package dukes.analysis;
 
-import jakarta.ws.rs.ApplicationPath;
-import jakarta.ws.rs.core.Application;
+import java.util.List;
 
-@ApplicationPath("api")
-public class HourglassModelApplication extends Application {
+public class AnalyticsOutput {
+
+    // Add fields as needed
 
 }

@@ -7,25 +7,12 @@
  *
  * * SPDX-License-Identifier: EPL-2.0
  ********************************************************************************/
-package dukes.hourglass;
+package dukes;
 
-public class HourglassInput {
-    private String domain;
-    private String useCase;
+import jakarta.ws.rs.ApplicationPath;
+import jakarta.ws.rs.core.Application;
 
-    public String getDomain() {
-        return domain;
-    }
+@ApplicationPath("api")
+public class SDVProcessingApplication extends Application {
 
-    public void setDomain(String domain) {
-        this.domain = domain;
-    }
-
-    public String getUseCase() {
-        return useCase;
-    }
-
-    public void setUseCase(String useCase) {
-        this.useCase = useCase;
-    }
 }

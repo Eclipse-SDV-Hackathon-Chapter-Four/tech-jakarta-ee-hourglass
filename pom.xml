@@ -15,9 +15,9 @@
 
     <groupId>dukes</groupId>
     <!-- Your application name here -->
-    <artifactId>clepsammia</artifactId>
+    <artifactId>sdv-processing</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>Hourglass Model Generator</name>
+    <name>SDV Processing</name>
     <packaging>war</packaging>
 
     <parent>
@@ -43,7 +43,7 @@
     <dependencies>
         <dependency>
             <groupId>jakarta.platform</groupId>
-            <artifactId>jakarta.jakartaee-web-api</artifactId>
+            <artifactId>jakarta.jakartaee-api</artifactId>
             <version>11.0.0</version>
             <scope>provided</scope>
         </dependency>
@@ -72,7 +72,7 @@
     </dependencies>
 
     <build>
-        <finalName>clepsammia</finalName>
+        <finalName>sdv-processing</finalName>
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -105,24 +105,6 @@
                     </configuration>
                 </plugin>
 
-                <plugin>
-                    <groupId>org.wildfly.plugins</groupId>
-                    <artifactId>wildfly-maven-plugin</artifactId>
-                    <version>6.0.1.Final</version>
-                    <configuration>
-                        <!--Bind to any interface, needed for remote access, e.g. in Docker-->
-                        <serverArgs>-b=0.0.0.0</serverArgs>
-                        <feature-packs>
-                            <feature-pack>
-                                <location>org.wildfly:wildfly-galleon-pack:39.0.1.Final</location>
-                            </feature-pack>
-                        </feature-packs>
-                        <layers>
-                            <!-- layers may be used to customize the server to provision-->
-                            <layer>cloud-server</layer>
-                        </layers>
-                    </configuration>
-                </plugin>
             </plugins>
         </pluginManagement>
     </build>
@@ -167,6 +149,41 @@
                                     <type>zip</type>
                                 </artifactInstaller>
                             </container>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>wildfly</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.wildfly.plugins</groupId>
+                        <artifactId>wildfly-maven-plugin</artifactId>
+                        <version>6.0.1.Final</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>provision</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <!--Bind to any interface, needed for remote access, e.g. in Docker-->
+                            <serverArgs>-b=0.0.0.0</serverArgs>
+                            <feature-packs>
+                                <feature-pack>
+                                    <location>org.wildfly:wildfly-galleon-pack:39.0.1.Final</location>
+                                </feature-pack>
+                            </feature-packs>
+                            <layers>
+                                <!-- layers may be used to customize the server to provision-->
+                                <layer>cloud-server</layer>
+                                <layer>ejb</layer>
+                                <layer>embedded-activemq</layer>
+                            </layers>
                         </configuration>
                     </plugin>
                 </plugins>
