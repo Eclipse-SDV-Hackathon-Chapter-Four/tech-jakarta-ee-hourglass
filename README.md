@@ -140,6 +140,19 @@ The application defines the topic at `java:app/jms/BatteryGuardianEvents` and
 logs incoming text messages. Other message types are logged by message ID.
 The subscription is non-durable, so it receives events only while active.
 
+```text
+Guardian service (via OpenMQ C binding)
+  |
+  v
+OpenMQ topic: battery.guardian.events
+  |
+  v
+BatteryGuardianEventsBean (MDB)
+  |
+  v
+Event processing
+```
+
 How to use the OpenMQ C bindings:
 
 Prerequisites:
@@ -173,9 +186,39 @@ Instead of using OpenMQ-specific C binding, create a small bridge Java applicati
 
 Guardian service will send events as POST requests, the bridge app will turn them into JMS messages, and a Jakarta EE application will consume them via `BatteryGuardianEventsBean` as in Idea 1.
 
+```text
+Guardian service
+  |
+  | HTTP POST
+  v
+Java HTTP-to-JMS bridge
+  |
+  | JMS
+  v
+JMS topic
+  |
+  v
+BatteryGuardianEventsBean (MDB)
+```
+
 #### Idea 3
 
 Use MQTT broker instead of a JMS broker. MQTT is not supported by standard Jakarta EE APIs. You can either use Azul's [MQTT cloud connector](https://docs.azul.com/payara/technical-documentation/ecosystem/connector-suites/cloud-connectors/mqtt.html) (the "jakarta" version MQTT-1.0.0) - it uses the standard JCA connetor atchitecture and should work with any Jakarta EE server. Or you can use any suitable Java MQTT client.
+
+```text
+Guardian service
+  |
+  | MQTT publish
+  v
+MQTT broker
+  |
+  | MQTT JCA connector or Java client
+  v
+Jakarta EE event handler
+  |
+  v
+Event processing
+```
 
 ### Process Battery Guardian events
 
@@ -183,12 +226,55 @@ Use MQTT broker instead of a JMS broker. MQTT is not supported by standard Jakar
 
 Store the events into an SQL database. Use Jakarta Persistence and an external SQL database, e.g. PostgreSQL, using its JDBC driver.
 
+```text
+BatteryGuardianEventsBean
+  |
+  | persist event entity
+  v
+Jakarta Persistence
+  |
+  | JDBC
+  v
+SQL database (for example, PostgreSQL)
+```
+
 #### Idea 2
 
 Store events into a time-series database using Jakarta NoSQL and Eclipse JNoSQL (https://github.com/eclipse-jnosql/jnosql-databases#time-series). 
 
 GlassFish 8 supports Jakarta Data repositories over NoSQL databases natively - define a Jakarta Data repository and configure the corresponding JNoSQL database driver. Follow the [GlassFish documentation](https://docs.omnifish.ee/glassfish/latest/application-development-guide/jakarta-data.html#configuring-nosql-data-repositories)
 
+```text
+BatteryGuardianEventsBean
+  |
+  | store event
+  v
+Jakarta Data repository
+  |
+  v
+Eclipse JNoSQL
+  |
+  v
+Time-series database
+```
+
 #### Idea 3
 
 Use LLM omdel to summarize the events collected over a specified interval. You can create a UI using Jakarta Faces and optinally Primefaces library, which allows specifying the interval and displays the reply from the LLM.
+
+```text
+Jakarta Faces UI
+  +-- choose interval
+  |
+  v
+Persisted event history
+  |
+  | events for selected interval
+  v
+LLM analytics service    <-->    External LLM model
+  |
+  v
+Jakarta Faces UI
+  |
+  +-- view summary
+```
